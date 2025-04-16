@@ -1,12 +1,127 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <!-- ... (mantenha todo o head existente) ... -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oferta Especial Confirmada | Obrigado!</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #fff9f9 0%, #ffecec 100%);
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: #333;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            margin: 20px;
+            border: 1px solid #ffebee;
+        }
+        
+        .offer-badge {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        .checkmark {
+            color: #ff6b6b;
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        h1 {
+            color: #d32f2f;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+        
+        p {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .price-tag {
+            background: #ffeeee;
+            color: #d32f2f;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 15px 0;
+        }
+    </style>
 </head>
 <body>
-    <!-- ... (mantenha todo o conteúdo HTML existente) ... -->
+    <div class="container">
+        <div class="offer-badge">OFERTA EXCLUSIVA</div>
+        <div class="checkmark">✓</div>
+        <h1>Compra Confirmada!</h1>
+        <div class="price-tag">R$ 19,90</div>
+        <p>Obrigado por aproveitar nossa oferta especial! Seu pedido está sendo processado.</p>
+        <p class="loading-text">Redirecionando automaticamente...</p>
+        <a href="https://compra-confirmada.my.canva.site" class="btn">Acessar Seu Produto</a>
+    </div>
 
-    <!-- Facebook Pixel Code - Versão Corrigida -->
+    <!-- Facebook Pixel Code - Versão Corrigida e Funcional -->
     <script>
         !function(f,b,e,v,n,t,s)
         {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -17,17 +132,17 @@
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
         
-        fbq('init', '1345211853386206'); // Substitua pelo seu Pixel ID
+        fbq('init', '1345211853386206'); // Seu Pixel ID
         
         document.addEventListener('DOMContentLoaded', function() {
             // Disparo do evento Purchase com parâmetros corretos
             fbq('track', 'Purchase', {
                 value: 19.90,
                 currency: 'BRL',
-                product_type: 'downsell' // Corrigido para "downsell"
+                product_type: 'downsell' // Parâmetro único para downsell
             });
             
-            // Redirecionamento após 5 segundos
+            // Redirecionamento após 5 segundos (opcional)
             setTimeout(() => {
                 window.location.href = "https://compra-confirmada.my.canva.site";
             }, 5000);
