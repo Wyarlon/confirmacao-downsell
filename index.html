@@ -1,98 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmação de Oferta Especial</title>  <!-- Alterado para identificar o downsell -->
+    <title>Oferta Especial Confirmada | Obrigado!</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-            background: #f5f5f5;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #fff9f9 0%, #ffecec 100%);
             margin: 0;
+            padding: 0;
             height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
+            text-align: center;
+            color: #333;
         }
-        .loader {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #FF5722;  <!-- Cor alterada para laranja (diferenciação visual) -->
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+        
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            margin: 20px;
+            border: 1px solid #ffebee;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .offer-tag {  <!-- Novo elemento para identificar o downsell -->
-            background: #FF5722;
+        
+        .offer-badge {
+            background: #ff6b6b;
             color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            margin-bottom: 15px;
+            padding: 8px 20px;
+            border-radius: 50px;
             font-size: 14px;
-        }
-        .fallback-link {
-            color: #FF5722;  <!-- Cor alterada para combinar com o tema -->
-            text-decoration: underline;
-            margin-top: 20px;
-            display: inline-block;
             font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+        
+        .checkmark {
+            color: #ff6b6b;
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        h1 {
+            color: #d32f2f;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+        
+        p {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        
+        .btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .loading-text {
+            margin-top: 20px;
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .price-tag {
+            background: #ffeeee;
+            color: #d32f2f;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 15px 0;
         }
     </style>
 </head>
 <body>
-    <div class="offer-tag">OFERTA ESPECIAL</div>  <!-- Novo -->
-    <h1>✅ Compra confirmada!</h1>
-    <div class="loader"></div>
-    <p>Processando seu pedido especial...</p>  <!-- Texto ajustado -->
-    <a href="https://compra-confirmada.my.canva.site" class="fallback-link" target="_top">  <!-- Link alterado -->
-        Clique aqui se não for redirecionado
-    </a>
+    <div class="container">
+        <div class="offer-badge">OFERTA EXCLUSIVA</div>
+        <div class="checkmark">✓</div>
+        <h1>Compra Confirmada!</h1>
+        <div class="price-tag">R$ 19,90</div>
+        <p>Obrigado por aproveitar nossa oferta especial! Seu pedido está sendo processado.</p>
+        <p class="loading-text">Redirecionando automaticamente...</p>
+        <a href="https://compra-confirmada.my.canva.site" class="btn">Acessar Seu Produto</a>
+    </div>
 
-    <!-- Pixel Otimizado para Downsell -->
+    <!-- Facebook Pixel para Downsell -->
     <script>
-        // Método garantido para disparar o Purchase
-        function firePixel() {
-            // VALOR ALTERADO PARA 19.90 E PARÂMETRO DE DOWNSELL ADICIONADO
+        document.addEventListener('DOMContentLoaded', function() {
+            // Disparo do Pixel para downsell
             const pixelParams = new URLSearchParams({
                 id: '1345211853386206',
                 ev: 'Purchase',
-                'cd[value]': '19.90',  // Valor modificado
+                'cd[value]': '19.90',
                 'cd[currency]': 'BRL',
-                'cd[product_type]': 'downsell',  // Novo parâmetro
+                'cd[product_type]': 'downsell',
                 noscript: '1',
                 t: Date.now()
             });
-
+            
             // Método 1: Imagem tradicional
             const img = new Image();
             img.src = `https://www.facebook.com/tr?${pixelParams}`;
             document.body.appendChild(img);
             
-            // Método 2: Fetch API (alternativo)
+            // Método 2: Fetch API (backup)
             fetch(`https://www.facebook.com/tr?${pixelParams}`, {
-                mode: 'no-cors',
-                credentials: 'omit'
+                mode: 'no-cors'
             });
-        }
-        
-        // Dispara o Pixel imediatamente
-        document.addEventListener('DOMContentLoaded', firePixel);
-        
-        // Redireciona após 3 segundos (link alterado)
-        setTimeout(() => {
-            window.location.href = "https://compra-confirmada.my.canva.site";  <!-- URL do downsell -->
-        }, 3000);
+            
+            // Redirecionamento após 5 segundos
+            setTimeout(() => {
+                window.location.href = "https://compra-confirmada.my.canva.site";
+            }, 5000);
+        });
     </script>
     
-    <!-- Fallback para navegadores sem JS (atualizado) -->
+    <!-- Fallback para navegadores sem JavaScript -->
     <noscript>
         <img height="1" width="1" style="display:none" 
              src="https://www.facebook.com/tr?id=1345211853386206&ev=Purchase&cd[value]=19.90&cd[currency]=BRL&cd[product_type]=downsell&noscript=1"/>
