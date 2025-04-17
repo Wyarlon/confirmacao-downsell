@@ -3,129 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌟 Sucesso! Compra Aprovada | Oferta Exclusiva</title>
+    <title>✅ Compra Aprovada | Método de Emagrecimento</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #6a11cb;
-            --secondary: #2575fc;
-            --accent: #ff4d4d;
-            --dark: #121212;
-            --light: #f8f9fa;
+            --primary: #FF6B35;
+            --secondary: #FFA630;
+            --accent: #FF4D4D;
+            --dark: #292929;
+            --light: #FFF8F0;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
         
         body {
             font-family: 'Poppins', sans-serif;
             background: var(--dark);
-            margin: 0;
-            padding: 0;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: white;
-            overflow: hidden;
-            perspective: 1000px;
+            overflow-x: hidden;
+            padding: 20px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
         
-        /* Efeito de partículas cósmicas */
-        .cosmos {
+        /* Efeito de chamas animadas */
+        .fire-effect {
             position: fixed;
-            width: 100%;
-            height: 100%;
             top: 0;
             left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(255,107,53,0.2) 0%, rgba(34,34,34,0) 70%);
             z-index: -2;
             pointer-events: none;
+            animation: fire-pulse 4s infinite alternate;
         }
         
-        /* Container holográfico */
-        .holographic-card {
-            background: rgba(20, 20, 30, 0.8);
-            border-radius: 24px;
-            box-shadow: 0 0 50px rgba(106, 17, 203, 0.6),
-                        0 0 100px rgba(37, 117, 252, 0.3);
-            padding: 60px;
-            max-width: 700px;
-            width: 90%;
-            margin: 20px;
+        /* Container principal */
+        .burning-card {
+            background: rgba(41, 41, 41, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(255, 107, 53, 0.4);
+            padding: 40px 25px;
+            width: 100%;
+            max-width: 420px;
             position: relative;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transform-style: preserve-3d;
-            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(10px);
-            animation: float 6s ease-in-out infinite;
+            border: 1px solid rgba(255, 166, 48, 0.3);
+            transform: translateZ(0);
         }
         
-        .holographic-card::before {
+        .burning-card::before {
             content: '';
             position: absolute;
-            top: -150%;
-            left: -150%;
-            width: 400%;
-            height: 400%;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
             background: linear-gradient(
                 to bottom right,
-                rgba(106, 17, 203, 0.1) 0%,
-                rgba(37, 117, 252, 0.1) 50%,
+                rgba(255, 107, 53, 0.1) 0%,
+                rgba(255, 166, 48, 0.1) 50%,
                 transparent 100%
             );
             transform: rotate(30deg);
+            animation: shine 8s infinite linear;
             z-index: -1;
-            animation: hologram 12s infinite linear;
         }
         
-        .holographic-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 24px;
-            border: 1px solid transparent;
-            background: linear-gradient(135deg, var(--primary), var(--secondary)) border-box;
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: destination-out;
-            mask-composite: exclude;
-            pointer-events: none;
-        }
-        
-        /* Elementos de glitch */
-        .glitch-layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: inherit;
-            opacity: 0;
-            animation: glitch 15s infinite;
-            mix-blend-mode: overlay;
-            pointer-events: none;
-        }
-        
-        /* Badge neon */
-        .neon-badge {
+        /* Badge em chamas */
+        .fire-badge {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
-            padding: 12px 35px;
+            padding: 12px 25px;
             border-radius: 50px;
             font-size: 16px;
             font-weight: 700;
             display: inline-block;
             margin-bottom: 30px;
-            box-shadow: 0 0 20px rgba(106, 17, 203, 0.8);
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.5);
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
             position: relative;
             overflow: hidden;
-            animation: neon-pulse 3s infinite ease-in-out;
+            animation: fire-badge-pulse 2s infinite ease-in-out;
         }
         
-        .neon-badge::after {
+        .fire-badge::after {
             content: '';
             position: absolute;
             top: -50%;
@@ -141,95 +114,86 @@
             animation: shine 5s infinite;
         }
         
-        /* Ícone 3D */
-        .icon-3d {
-            font-size: 120px;
-            margin: 40px 0;
+        /* Ícones temáticos */
+        .icon-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .emagrecer-icon {
+            font-size: 50px;
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            filter: drop-shadow(0 0 20px rgba(106, 17, 203, 0.5));
-            animation: float 6s ease-in-out infinite, glow 2s infinite alternate;
-            transform-style: preserve-3d;
+            filter: drop-shadow(0 3px 10px rgba(255, 107, 53, 0.5));
+            animation: float 4s ease-in-out infinite;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         
-        /* Título com efeito de dispersão */
+        /* Título principal */
         h1 {
             color: white;
-            margin-bottom: 25px;
-            font-size: 42px;
-            font-weight: 900;
+            margin-bottom: 20px;
+            font-size: 32px;
+            font-weight: 800;
             line-height: 1.3;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-            position: relative;
-            display: inline-block;
+            text-align: center;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
         }
         
         h1 span {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
             display: inline-block;
-            animation: text-float 4s ease-in-out infinite;
+            animation: text-pulse 2s infinite alternate;
         }
         
-        /* Preço com efeito de partículas */
+        /* Preço */
         .price-tag {
-            background: linear-gradient(135deg, rgba(106, 17, 203, 0.2) 0%, rgba(37, 117, 252, 0.2) 100%);
+            background: rgba(255, 255, 255, 0.1);
             color: white;
-            padding: 18px 40px;
+            padding: 15px 30px;
             border-radius: 50px;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             display: inline-block;
-            margin: 30px 0;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
+            margin: 20px 0;
+            border: 1px dashed rgba(255, 166, 48, 0.5);
             animation: price-float 5s ease-in-out infinite;
         }
         
-        .price-tag::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                transparent,
-                rgba(255, 255, 255, 0.1),
-                transparent
-            );
-            animation: shine 3s infinite;
-        }
-        
-        /* Texto com efeito de máquina de escrever */
+        /* Texto */
         .typing-text {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 40px;
-            font-size: 20px;
+            color: rgba(255, 248, 240, 0.9);
+            margin-bottom: 30px;
+            font-size: 18px;
             line-height: 1.6;
-            max-width: 80%;
-            margin-left: auto;
-            margin-right: auto;
+            text-align: center;
             position: relative;
         }
         
         .typing-text::after {
             content: '|';
             animation: blink 1s infinite;
-            position: absolute;
         }
         
-        /* Barra de progresso futurista */
+        /* Barra de progresso */
         .progress-container {
             width: 100%;
-            max-width: 400px;
             height: 8px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
-            margin: 30px auto;
+            margin: 30px 0;
             overflow: hidden;
             position: relative;
         }
@@ -239,7 +203,7 @@
             width: 0;
             background: linear-gradient(90deg, var(--primary), var(--secondary));
             border-radius: 10px;
-            animation: progress-load 8s forwards;
+            animation: progress-load 10s forwards;
             position: relative;
         }
         
@@ -259,80 +223,60 @@
             animation: shine 2s infinite;
         }
         
-        /* Botão com efeito de energia */
-        .energy-btn {
+        /* Botão */
+        .fire-btn {
             background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             border: none;
-            padding: 20px 50px;
+            padding: 18px 40px;
             border-radius: 50px;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             text-decoration: none;
-            display: inline-block;
-            margin-top: 30px;
-            box-shadow: 0 0 30px rgba(106, 17, 203, 0.5);
+            display: block;
+            margin: 30px auto 0;
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.5);
             position: relative;
             overflow: hidden;
-            transform-style: preserve-3d;
-            z-index: 1;
+            width: 100%;
+            max-width: 280px;
+            text-align: center;
         }
         
-        .energy-btn:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 0 50px rgba(106, 17, 203, 0.8);
+        .fire-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.7);
         }
         
-        .energy-btn::before {
+        .fire-btn::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
+            left: -100%;
             width: 100%;
             height: 100%;
             background: linear-gradient(
-                45deg,
+                90deg,
                 transparent,
                 rgba(255, 255, 255, 0.2),
                 transparent
             );
-            transform: translateX(-100%);
-            transition: transform 0.6s;
-            z-index: -1;
+            transition: all 0.6s;
         }
         
-        .energy-btn:hover::before {
-            transform: translateX(100%);
+        .fire-btn:hover::before {
+            left: 100%;
         }
         
-        .energy-btn::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            border-radius: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            z-index: -2;
-            filter: blur(10px);
-            opacity: 0;
-            transition: opacity 0.4s;
-        }
-        
-        .energy-btn:hover::after {
-            opacity: 0.8;
-        }
-        
-        /* Efeitos de texto */
+        /* Texto de loading */
         .loading-text {
             margin-top: 20px;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 248, 240, 0.7);
             font-style: italic;
+            text-align: center;
             position: relative;
-            display: inline-block;
         }
         
         .loading-text::after {
@@ -341,40 +285,35 @@
             animation: dots 1.5s infinite steps(4, end);
         }
         
-        /* Animações personalizadas */
-        @keyframes hologram {
+        /* Animações */
+        @keyframes fire-pulse {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.7; }
+        }
+        
+        @keyframes fire-badge-pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 5px 20px rgba(255, 107, 53, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255, 107, 53, 0.8); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes text-pulse {
+            0% { text-shadow: 0 0 10px rgba(255, 107, 53, 0.5); }
+            100% { text-shadow: 0 0 20px rgba(255, 166, 48, 0.8); }
+        }
+        
+        @keyframes shine {
             0% { transform: rotate(30deg) translate(-30%, -30%); }
             100% { transform: rotate(30deg) translate(30%, 30%); }
         }
         
-        @keyframes neon-pulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(106, 17, 203, 0.8); }
-            50% { box-shadow: 0 0 40px rgba(106, 17, 203, 1); }
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotateX(0deg) rotateY(0deg); }
-            50% { transform: translateY(-20px) rotateX(5deg) rotateY(5deg); }
-        }
-        
         @keyframes price-float {
             0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-10px) scale(1.05); }
-        }
-        
-        @keyframes text-float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-        }
-        
-        @keyframes glow {
-            0% { filter: drop-shadow(0 0 20px rgba(106, 17, 203, 0.5)); }
-            100% { filter: drop-shadow(0 0 30px rgba(37, 117, 252, 0.8)); }
-        }
-        
-        @keyframes shine {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            50% { transform: translateY(-5px) scale(1.03); }
         }
         
         @keyframes progress-load {
@@ -393,96 +332,74 @@
             60%, 100% { content: '...'; }
         }
         
-        @keyframes glitch {
-            0% { opacity: 0; transform: translate(0); }
-            2% { opacity: 0.1; transform: translate(-5px, 5px); }
-            4% { opacity: 0; transform: translate(5px, -5px); }
-            6% { opacity: 0.2; transform: translate(-5px, 5px); }
-            8% { opacity: 0; transform: translate(0); }
-            100% { opacity: 0; transform: translate(0); }
-        }
-        
-        /* Efeito de partículas cósmicas */
-        .particle {
-            position: absolute;
-            border-radius: 50%;
-            background: white;
-            opacity: 0;
-            animation: particle-float linear infinite;
-        }
-        
-        @keyframes particle-float {
-            0% { transform: translateY(0) translateX(0); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
-        }
-        
-        /* Responsividade */
-        @media (max-width: 768px) {
-            .holographic-card {
-                padding: 40px 20px;
+        /* Otimizações específicas para mobile */
+        @media (max-width: 480px) {
+            .burning-card {
+                padding: 30px 20px;
+                border-radius: 20px;
             }
             
             h1 {
-                font-size: 32px;
+                font-size: 26px;
             }
             
-            .icon-3d {
-                font-size: 80px;
+            .emagrecer-icon {
+                font-size: 40px;
+                width: 50px;
+                height: 50px;
             }
             
             .typing-text {
-                max-width: 100%;
-                font-size: 18px;
+                font-size: 16px;
             }
             
-            .energy-btn {
-                padding: 16px 40px;
-                font-size: 18px;
+            .fire-btn {
+                padding: 16px 30px;
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Efeito de partículas cósmicas -->
-    <div class="cosmos" id="cosmos"></div>
-    
-    <!-- Camada de glitch -->
-    <div class="glitch-layer"></div>
+    <!-- Efeito de fogo -->
+    <div class="fire-effect"></div>
     
     <!-- Container principal -->
-    <div class="holographic-card animate__animated animate__fadeIn">
-        <div class="neon-badge animate__animated animate__fadeInDown animate__delay-1s">
+    <div class="burning-card animate__animated animate__fadeIn">
+        <div class="fire-badge animate__animated animate__fadeInDown animate__delay-1s">
             Compra Aprovada
         </div>
         
-        <div class="icon-3d animate__animated animate__zoomIn animate__delay-2s">
-            ✨
-        </div>
-        
         <h1 class="animate__animated animate__fadeInUp animate__delay-1s">
-            <span>SUCESSO!</span>
+            <span>TRANSFORMAÇÃO CONFIRMADA!</span>
         </h1>
         
         <div class="price-tag animate__animated animate__fadeIn animate__delay-2s">
             R$ 19,90
         </div>
         
-        <div class="typing-text animate__animated animate__fadeIn animate__delay-3s">
-            Seu pagamento foi aprovado! Em instantes você receberá o acesso completo no seu WhatsApp.
+        <!-- Ícones temáticos centralizados -->
+        <div class="icon-grid">
+            <div class="emagrecer-icon animate__animated animate__zoomIn animate__delay-3s">🔥</div>
+            <div class="emagrecer-icon animate__animated animate__zoomIn animate__delay-3s">🍵</div>
+            <div class="emagrecer-icon animate__animated animate__zoomIn animate__delay-3s">📏</div>
+            <div class="emagrecer-icon animate__animated animate__zoomIn animate__delay-3s">⚖️</div>
         </div>
         
-        <div class="progress-container animate__animated animate__fadeIn animate__delay-4s">
+        <div class="typing-text animate__animated animate__fadeIn animate__delay-4s">
+            Seu acesso ao Método de Emagrecimento Acelerado está sendo preparado! Você receberá tudo no seu WhatsApp em até 5 minutos.
+        </div>
+        
+        <div class="progress-container animate__animated animate__fadeIn animate__delay-5s">
             <div class="progress-bar"></div>
         </div>
         
-        <p class="loading-text animate__animated animate__fadeIn animate__delay-5s">
-            Preparando seu material
+        <p class="loading-text animate__animated animate__fadeIn animate__delay-6s">
+            Gerando seu acesso exclusivo
         </p>
         
-        <a href="https://compra-confirmada.my.canva.site" class="energy-btn animate__animated animate__fadeInUp animate__delay-5s">
-            ACESSAR ÁREA VIP
+        <a href="https://compra-confirmada.my.canva.site" class="fire-btn animate__animated animate__fadeInUp animate__delay-6s">
+            ACESSAR MÉTODO COMPLETO
         </a>
     </div>
 
@@ -504,41 +421,10 @@
             product_type: 'downsell'
         });
         
-        // Redirecionamento após 8 segundos
+        // Redirecionamento após 10 segundos
         setTimeout(() => {
             window.location.href = "https://compra-confirmada.my.canva.site";
-        }, 8000);
-    </script>
-    
-    <!-- Efeito de partículas cósmicas -->
-    <script>
-        // Configuração das partículas
-        const cosmos = document.getElementById('cosmos');
-        const particleCount = 100;
-        
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            
-            // Tamanho aleatório
-            const size = Math.random() * 3 + 1;
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            
-            // Posição inicial
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.bottom = `-${size}px`;
-            
-            // Duração e atraso da animação
-            const duration = Math.random() * 20 + 10;
-            const delay = Math.random() * 10;
-            particle.style.animation = `particle-float ${duration}s ${delay}s linear infinite`;
-            
-            // Brilho aleatório
-            particle.style.opacity = Math.random() * 0.5 + 0.1;
-            
-            cosmos.appendChild(particle);
-        }
+        }, 10000);
     </script>
     
     <noscript>
