@@ -3,46 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmação de Compra</title>
+    <title>Compra Confirmada - R$39,90</title>
+    
+   <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
+<!-- End Google Tag Manager -->
+    
+    <!-- Facebook Pixel (versão otimizada) -->
     <script>
-        // Variáveis controláveis
-        const pixelFired = false; // Impede disparos duplicados
+        let pixelFired = false; // Controle de disparo único
         
         function firePixel() {
-            if(pixelFired) return;
+            if (pixelFired) return;
             
-            const pixelID = '1345211853386206';
-            const params = new URLSearchParams({
-                ev: 'Purchase',
-                'cd[value]': '19.90',  // Ponto decimal
-                'cd[currency]': 'BRL',
-                'cd[product_type]': 'downsell', // Corrigido
-                noscript: '1',
-                t: Date.now()
+            // 1. Recupera o fbclid (localStorage > cookie > padrão)
+            const fbclid = localStorage.getItem('ultimo_fbclid') || 
+                          document.cookie.split('; ').find(row => row.startsWith('fbclid='))?.split('=')[1] || 
+                          'N/A';
+            
+            // 2. Dispara o Pixel do Facebook
+            fbq('track', 'Purchase', {
+                value: 39.90,
+                currency: 'BRL',
+                product_type: 'principal', // Diferencia da oferta downsell
+                fbclid: fbclid
             });
             
-            // Método único de disparo
-            navigator.sendBeacon(`https://www.facebook.com/tr?id=${pixelID}&${params}`);
+            // 3. Dispara evento no GTM
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+                'event': 'purchase',
+                'value': 39.90,
+                'currency': 'BRL',
+                'fbclid': fbclid
+            });
             
             pixelFired = true;
+            console.log('Pixel disparado:', fbclid); // Debug
         }
         
-        // Dispara ao carregar
-        window.addEventListener('DOMContentLoaded', firePixel);
+        // Carrega o Pixel do Facebook
+        !function(f,b,e,v,n,t,s) {
+            if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
+        }(window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
         
-        // Redireciona após 3s
+        fbq('init', 'SEU_PIXEL_ID'); // Substitua pelo seu ID
+        window.addEventListener('DOMContentLoaded', firePixel);
+    </script>
+</head>
+<body style="font-family: Arial; text-align: center; padding: 50px; background: #f5f5f5;">
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3SZTP8L"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+    <!-- Facebook Pixel (noscript) -->
+    <noscript>
+        <img height="1" width="1" src="https://www.facebook.com/tr?id=1345211853386206&ev=Purchase&noscript=1"/>
+    </noscript>
+    
+    <h1>✅ Compra confirmada!</h1>
+    <p>Obrigado por adquirir nossa oferta principal por <strong>R$39,90</strong>.</p>
+    <p>Aguarde, você será redirecionado...</p>
+    
+    <script>
+        // Redirecionamento após 3 segundos (opcional)
         setTimeout(() => {
             window.location.href = "https://compra-confirmada.my.canva.site";
         }, 3000);
     </script>
-</head>
-<body style="
-    font-family: Arial;
-    text-align: center;
-    padding: 50px;
-    background: #f5f5f5;
-">
-    <h1>✅ Compra confirmada!</h1>
-    <p>Aguarde o redirecionamento...</p>
 </body>
 </html>
