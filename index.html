@@ -71,12 +71,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p>Obrigado por adquirir nossa oferta principal por <strong>R$39,90</strong>.</p>
     <p>Aguarde, você será redirecionado...</p>
     
-   <script>
-    // Se NÃO tiver ?debug=true na URL, redireciona
-    if (!new URLSearchParams(window.location.search).has('debug')) {
+  <script>
+    // Redireciona apenas se não estiver em modo debug
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('debug') !== 'true') {
         setTimeout(() => {
             window.location.href = "https://compra-confirmada.my.canva.site";
         }, 3000);
+    } else {
+        console.log("Modo debug ativo - Redirecionamento desativado.");
     }
 </script>
 </body>
