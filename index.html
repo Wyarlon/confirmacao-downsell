@@ -71,11 +71,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p>Obrigado por adquirir nossa oferta principal por <strong>R$39,90</strong>.</p>
     <p>Aguarde, você será redirecionado...</p>
     
-    <script>
-        // Redirecionamento após 3 segundos (opcional)
+   <script>
+    // Se NÃO tiver ?debug=true na URL, redireciona
+    if (!new URLSearchParams(window.location.search).has('debug')) {
         setTimeout(() => {
             window.location.href = "https://compra-confirmada.my.canva.site";
-        }, 10000);
-    </script>
+        }, 3000);
+    }
+</script>
 </body>
 </html>
