@@ -14,102 +14,112 @@
     })(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
     <!-- End Google Tag Manager -->
     
-    <!-- Facebook Pixel (versão à prova de erros) -->
+    <!-- Facebook Pixel (versão corrigida e otimizada) -->
     <script>
-        // ========== CONFIGURAÇÃO INICIAL ========== //
-        const debugMode = new URLSearchParams(location.search).has('debug');
-        const domain = location.hostname.includes('github.io') ? '.github.io' : location.hostname;
+        // Configuração à prova de falhas
+        if(!window._fbPixelLoaded) {
+            window._fbPixelLoaded = true;
+            
+            // 1. Corrige localStorage e cookies
+            const setupTrackingIds = () => {
+                // Corrige fbclid
+                const fbclid = new URLSearchParams(location.search).get('fbclid') 
+                    || document.cookie.match(/fbclid=([^;]+)/)?.[1];
+                
+                if(fbclid && !localStorage.getItem('ultimo_fbclid')) {
+                    localStorage.setItem('ultimo_fbclid', fbclid);
+                    document.cookie = `fbclid=${fbclid}; path=/; max-age=2592000; SameSite=None; Secure`;
+                }
+                
+                // Garante cookies do Facebook
+                const domain = location.hostname.includes('github.io') 
+                    ? '.github.io' 
+                    : location.hostname;
+                
+                if(!document.cookie.includes('_fbp=')) {
+                    const fbpValue = `fb.1.${Date.now()}.${Math.random().toString(36).substr(2,8)}`;
+                    document.cookie = `_fbp=${fbpValue}; domain=${domain}; path=/; max-age=2592000; SameSite=None; Secure`;
+                }
+                
+                if(!document.cookie.includes('_fbc=')) {
+                    const fbcValue = `fb.1.${Date.now()}.${Math.random().toString(36).substr(2,8)}`;
+                    document.cookie = `_fbc=${fbcValue}; domain=${domain}; path=/; max-age=2592000; SameSite=None; Secure`;
+                }
+                
+                return fbclid || 'N/A';
+            };
 
-        // 1. CORREÇÃO DO LOCALSTORAGE (se faltando)
-        if(!localStorage.getItem('ultimo_fbclid')) {
-            const fbclidCookie = document.cookie.match(/fbclid=([^;]+)/)?.[1];
-            if(fbclidCookie) localStorage.setItem('ultimo_fbclid', fbclidCookie);
-        }
+            // 2. Carrega o Pixel corretamente
+            !function(f,b,e,v,n,t,s){
+                if(f.fbq)return;
+                n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)
+            }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
 
-        // 2. GARANTIR COOKIES DO FACEBOOK
-        if(!document.cookie.includes('_fbp=')) {
-            document.cookie = `_fbp=fb.1.${Date.now()}.${Math.random().toString(36).substr(2,8)}; domain=${domain}; path=/; max-age=2592000; SameSite=None; Secure`;
-        }
-        if(!document.cookie.includes('_fbc=')) {
-            document.cookie = `_fbc=fb.1.${Date.now()}.${Math.random().toString(36).substr(2,8)}; domain=${domain}; path=/; max-age=2592000; SameSite=None; Secure`;
-        }
-
-        // ========== INICIALIZAÇÃO DO PIXEL ========== //
-        !function(f,b,e,v,n,t,s){
-            if(f.fbq)return;
-            n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)
-        }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-
-        fbq('init', '1345211853386206', {
-            autoConfig: true,
-            debug: debugMode
-        });
-
-        // ========== DISPARO DE EVENTOS ========== //
-        function fireTracking() {
-            const fbclid = localStorage.getItem('ultimo_fbclid') || document.cookie.match(/fbclid=([^;]+)/)?.[1] || 'N/A';
-            const fbc = document.cookie.match(/_fbc=([^;]+)/)?.[1] || '';
-            const fbp = document.cookie.match(/_fbp=([^;]+)/)?.[1] || '';
-
-            // Facebook Pixel
-            fbq('track', 'Purchase', {
-                value: 19.90,
-                currency: 'BRL',
-                contents: [{
-                    id: 'downsell_offer',
-                    quantity: 1
-                }],
-                content_type: 'product',
-                fbclid: fbclid,
-                fbc: fbc,
-                fbp: fbp
+            // 3. Configuração moderna do Pixel
+            fbq('init', '1345211853386206', { 
+                autoConfig: true, 
+                debug: new URLSearchParams(location.search).has('debug')
             });
 
-            // Google Tag Manager
-            window.dataLayer = window.dataLayer || [];
-            dataLayer.push({
-                'event': 'purchase_downsell',
-                'ecommerce': {
-                    'purchase': {
-                        'actionField': {
-                            'id': fbclid,
-                            'revenue': 19.90,
-                            'currency': 'BRL'
-                        },
-                        'products': [{
-                            'id': 'downsell_offer',
-                            'name': 'Oferta Downsell',
-                            'price': 19.90,
-                            'quantity': 1
-                        }]
-                    }
-                },
-                'fbclid': fbclid,
-                'fbc': fbc,
-                'fbp': fbp
-            });
+            // 4. Dispara eventos após carregamento
+            fbq('getBrowserId', function(browserId) {
+                const fbclid = setupTrackingIds();
+                const fbc = document.cookie.match(/_fbc=([^;]+)/)?.[1] || '';
+                const fbp = document.cookie.match(/_fbp=([^;]+)/)?.[1] || browserId;
 
-            // Debug
-            if(debugMode) {
-                console.table({
-                    'FBClID (localStorage)': localStorage.getItem('ultimo_fbclid'),
-                    'FBClID (cookie)': document.cookie.match(/fbclid=([^;]+)/)?.[1],
-                    '_fbc': fbc,
-                    '_fbp': fbp,
-                    'Pixel Status': window.fbq ? 'Ativo' : 'Inativo'
+                // Facebook Pixel
+                fbq('track', 'Purchase', {
+                    value: 19.90,
+                    currency: 'BRL',
+                    contents: [{id: 'downsell_offer', quantity: 1}],
+                    content_type: 'product',
+                    fbclid: fbclid,
+                    fbc: fbc,
+                    fbp: fbp
                 });
-            }
-        }
 
-        // Dispara quando o Pixel estiver pronto
-        if(window.fbq) {
-            fbq('ready', fireTracking);
-        } else {
-            document.addEventListener('fbq:ready', fireTracking);
+                // Google Tag Manager
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
+                    'event': 'purchase_downsell',
+                    'ecommerce': {
+                        'purchase': {
+                            'actionField': {
+                                'id': fbclid,
+                                'revenue': 19.90,
+                                'currency': 'BRL'
+                            },
+                            'products': [{
+                                'id': 'downsell_offer',
+                                'name': 'Oferta Downsell',
+                                'price': 19.90,
+                                'quantity': 1
+                            }]
+                        }
+                    },
+                    'fbclid': fbclid,
+                    'fbc': fbc,
+                    'fbp': fbp
+                });
+
+                // Debug
+                if(new URLSearchParams(location.search).has('debug')) {
+                    console.table({
+                        'FBClID': fbclid,
+                        'Fonte FBClID': fbclid === 'N/A' ? 'Não encontrado' : 
+                                         (new URLSearchParams(location.search).has('fbclid') ? 'URL' :
+                                         document.cookie.includes('fbclid') ? 'Cookie' : 'LocalStorage',
+                        '_fbc': fbc || 'Não encontrado',
+                        '_fbp': fbp || 'Não encontrado',
+                        'BrowserID': browserId,
+                        'Pixel Status': 'Configurado com sucesso'
+                    });
+                }
+            });
         }
     </script>
 </head>
