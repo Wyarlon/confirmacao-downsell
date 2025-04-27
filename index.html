@@ -14,11 +14,11 @@
     })(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
     <!-- End Google Tag Manager -->
 
-    <!-- Facebook Pixel Configuração Simplificada e Eficaz -->
+    <!-- Facebook Pixel Configuração Simplificada -->
     <script>
-        // 1. INICIALIZAÇÃO À PROVA DE ERROS
-        if(!window._pixelLoaded) {
-            window._pixelLoaded = true;
+        // 1. INICIALIZAÇÃO ROBUSTA
+        if(!window._pixelInitDone) {
+            window._pixelInitDone = true;
             
             !function(f,b,e,v,n,t,s){
                 if(f.fbq)return;
@@ -33,65 +33,42 @@
             fbq('track', 'PageView');
         }
 
-        // 2. FUNÇÃO PRINCIPAL ROBUSTA
+        // 2. FUNÇÃO PRINCIPAL OTIMIZADA
         function trackPurchase() {
-            // Garante cookies no modo debug
             const isDebug = new URLSearchParams(location.search).has('debug');
-            const domain = location.hostname.includes('github.io') ? '.github.io' : location.hostname;
+            const fbclid = new URLSearchParams(location.search).get('fbclid') || 'N/A';
             
-            if(isDebug) {
-                if(!document.cookie.includes('_fbp=')) {
-                    document.cookie = `_fbp=fb.1.${Date.now()}.${Math.random().toString(36).substr(2,8)}; domain=${domain}; path=/; max-age=2592000; SameSite=None; Secure`;
-                }
-                if(!document.cookie.includes('_fbc=')) {
-                    document.cookie = `_fbc=fb.1.${Date.now()}.${Math.random().toString(36).substr(2,8)}; domain=${domain}; path=/; max-age=2592000; SameSite=None; Secure`;
-                }
-            }
-
-            // Recupera identificadores
-            const fbclid = new URLSearchParams(location.search).get('fbclid') 
-                          || localStorage.getItem('ultimo_fbclid') 
-                          || document.cookie.match(/fbclid=([^;]+)/)?.[1] 
-                          || 'N/A';
-            
-            const fbc = document.cookie.match(/_fbc=([^;]+)/)?.[1] || '';
-            const fbp = document.cookie.match(/_fbp=([^;]+)/)?.[1] || '';
-
-            // Dispara eventos
-            fbq('track', 'Purchase', {
+            // Dados essenciais
+            const eventData = {
                 value: 19.90,
                 currency: 'BRL',
                 content_ids: ['downsell_offer'],
                 content_type: 'product',
                 fbclid: fbclid,
-                fbc: fbc,
-                fbp: fbp
-            });
+                fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || '',
+                fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || ''
+            };
 
+            // Dispara eventos
+            fbq('track', 'Purchase', eventData);
+            
             window.dataLayer = window.dataLayer || [];
             dataLayer.push({
                 'event': 'purchase_downsell',
-                'value': 19.90,
-                'currency': 'BRL',
-                'fbclid': fbclid,
-                'fbc': fbc,
-                'fbp': fbp
+                ...eventData
             });
 
-            // Debug claro
+            // Debug limpo e consistente
             if(isDebug) {
-                console.table({
+                console.log('✅ Rastreamento concluído', {
                     'FBClID': fbclid,
-                    'Fonte': fbclid === 'N/A' ? 'Não encontrado' : 
-                            new URLSearchParams(location.search).has('fbclid') ? 'URL' :
-                            localStorage.getItem('ultimo_fbclid') ? 'LocalStorage' : 'Cookie',
-                    '_fbc': fbc || 'Não encontrado',
-                    '_fbp': fbp || 'Não encontrado'
+                    'Fonte': new URLSearchParams(location.search).has('fbclid') ? 'URL' : 'Não encontrado',
+                    'Dados Enviados': eventData
                 });
             }
         }
 
-        // Dispara quando seguro
+        // Disparo seguro
         if(document.readyState === 'complete') {
             trackPurchase();
         } else {
@@ -110,18 +87,8 @@
     <p>Aguarde, você será redirecionado...</p>
     
     <script>
-        // REDIRECIONAMENTO CONFIÁVEL
-        const urlParams = new URLSearchParams(location.search);
-        
-        if(!urlParams.has('debug')) {
-            // Armazena fbclid se existir na URL
-            if(urlParams.has('fbclid')) {
-                const fbclid = urlParams.get('fbclid');
-                localStorage.setItem('ultimo_fbclid', fbclid);
-                document.cookie = `fbclid=${fbclid}; path=/; max-age=2592000`;
-            }
-            
-            // Redireciona após 3s
+        // REDIRECIONAMENTO SIMPLIFICADO
+        if(!new URLSearchParams(location.search).has('debug')) {
             setTimeout(() => {
                 window.location.href = "https://compra-confirmada.my.canva.site";
             }, 3000);
