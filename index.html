@@ -3,8 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compra Confirmada - R$19,90</title>
+    <title>Compra Confirmada - R$50,00</title>
     
+    <!-- Camada de Dados (Data Layer) para o GTM -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+            event: "purchase_downsell",  // Nome do evento no GTM
+            Value: 50.00,                // Valor numérico (sem aspas)
+            Currency: "BRL",             // Moeda em maiúsculas
+            content_ids: ['downsell_offer'],  // IDs dos produtos
+            content_type: 'product'      // Tipo de conteúdo
+        });
+    </script>
+
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){
         w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
@@ -12,86 +24,67 @@
         j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
         f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
-    <!-- End Google Tag Manager -->
+    <!-- Fim do Google Tag Manager -->
 
-    <!-- Facebook Pixel Configuração Simplificada -->
+    <!-- Código do Facebook Pixel -->
     <script>
-        // 1. INICIALIZAÇÃO ROBUSTA
-        if(!window._pixelInitDone) {
-            window._pixelInitDone = true;
-            
-            !function(f,b,e,v,n,t,s){
-                if(f.fbq)return;
-                n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                n.queue=[];t=b.createElement(e);t.async=!0;
-                t.src=v;s=b.getElementsByTagName(e)[0];
-                s.parentNode.insertBefore(t,s)
-            }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-            
-            fbq('init', '1345211853386206');
-            fbq('track', 'PageView');
-        }
+        // Configuração básica do Pixel
+        !function(f,b,e,v,n,t,s){
+            if(f.fbq)return;
+            n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+            n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t,s)
+        }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        
+        fbq('init', '1345211853386206');  // ID do seu Pixel
+        fbq('track', 'PageView');         // Rastreamento de página
 
-        // 2. FUNÇÃO PRINCIPAL OTIMIZADA
+        // Função para rastrear a compra
         function trackPurchase() {
-            const isDebug = new URLSearchParams(location.search).has('debug');
-            const fbclid = new URLSearchParams(location.search).get('fbclid') || 'N/A';
-            
-            // Dados essenciais
-            const eventData = {
-                value: 19.90,
-                currency: 'BRL',
-                content_ids: ['downsell_offer'],
-                content_type: 'product',
-                fbclid: fbclid,
-                fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || '',
-                fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || ''
-            };
-
-            // Dispara eventos
-            fbq('track', 'Purchase', eventData);
-            
-            window.dataLayer = window.dataLayer || [];
-            dataLayer.push({
-                'event': 'purchase_downsell',
-                ...eventData
+            fbq('track', 'Purchase', {
+                value: 50.00,             // Valor da compra
+                currency: 'BRL',          // Moeda (Real Brasileiro)
+                content_ids: ['downsell_offer'],  // ID do produto
+                content_type: 'product',  // Tipo de conteúdo
+                fbclid: new URLSearchParams(location.search).get('fbclid') || '',  // FB Click ID
+                fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || '',  // Cookie _fbc
+                fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || ''   // Cookie _fbp
             });
-
-            // Debug limpo e consistente
-            if(isDebug) {
-                console.log('✅ Rastreamento concluído', {
-                    'FBClID': fbclid,
-                    'Fonte': new URLSearchParams(location.search).has('fbclid') ? 'URL' : 'Não encontrado',
-                    'Dados Enviados': eventData
-                });
-            }
         }
-
-        // Disparo seguro
+        
+        // Dispara a função quando a página carregar
         if(document.readyState === 'complete') {
             trackPurchase();
         } else {
-            window.addEventListener('DOMContentLoaded', trackPurchase);
+            window.addEventListener('load', trackPurchase);
         }
     </script>
+    <!-- Fallback para navegadores sem JavaScript -->
+    <noscript>
+        <img height="1" width="1" style="display:none" 
+             src="https://www.facebook.com/tr?id=1345211853386206&ev=Purchase&noscript=1"/>
+    </noscript>
 </head>
 <body style="font-family: Arial; text-align: center; padding: 50px; background: #f5f5f5;">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3SZTP8L"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
+    <!-- Fim do Google Tag Manager (noscript) -->
     
     <h1>✅ Compra confirmada!</h1>
-    <p>Obrigado por adquirir nossa oferta especial por <strong>R$19,90</strong>.</p>
+    <p>Obrigado por adquirir nossa oferta especial por <strong>R$50,00</strong>.</p>
     <p>Aguarde, você será redirecionado...</p>
     
+    <!-- Redirecionamento automático (3 segundos) -->
     <script>
-        // REDIRECIONAMENTO SIMPLIFICADO
         if(!new URLSearchParams(location.search).has('debug')) {
             setTimeout(() => {
                 window.location.href = "https://compra-confirmada.my.canva.site";
             }, 3000);
+        } else {
+            console.log('Modo debug ativo - Redirecionamento desabilitado');
         }
     </script>
 </body>
