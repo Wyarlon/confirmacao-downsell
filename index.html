@@ -16,7 +16,7 @@
 
     <!-- Facebook Pixel Configuração -->
     <script>
-        // Configuração robusta mas simplificada
+        // Configuração otimizada
         !function(f,b,e,v,n,t,s){
             if(f.fbq)return;
             n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -31,38 +31,56 @@
         
         // Função principal de rastreamento
         function trackPurchase() {
-            // 1. Recupera identificadores
-            const fbclid = localStorage.getItem('ultimo_fbclid') || 
-                         document.cookie.match(/fbclid=([^;]+)/)?.[1] || 
-                         'N/A';
+            // 1. Recupera identificadores de forma segura
+            let fbclid, fbc, fbp;
             
-            const fbc = document.cookie.match(/_fbc=([^;]+)/)?.[1] || '';
-            const fbp = document.cookie.match(/_fbp=([^;]+)/)?.[1] || '';
+            try {
+                fbclid = localStorage.getItem('ultimo_fbclid') || 
+                        document.cookie.match(/fbclid=([^;]+)/)?.[1] || 
+                        'N/A';
+                
+                fbc = document.cookie.match(/_fbc=([^;]+)/)?.[1] || '';
+                fbp = document.cookie.match(/_fbp=([^;]+)/)?.[1] || '';
+            } catch(e) {
+                console.error("Erro ao ler cookies:", e);
+                fbclid = 'N/A';
+                fbc = '';
+                fbp = '';
+            }
 
             // 2. Dispara Pixel do Facebook
-            fbq('track', 'Purchase', {
-                value: 19.90,
-                currency: 'BRL',
-                content_ids: ['downsell_offer'],
-                content_type: 'product',
-                fbclid: fbclid,
-                fbc: fbc,
-                fbp: fbp
-            });
+            try {
+                fbq('track', 'Purchase', {
+                    value: 19.90,
+                    currency: 'BRL',
+                    content_ids: ['downsell_offer'],
+                    content_type: 'product',
+                    fbclid: fbclid,
+                    fbc: fbc,
+                    fbp: fbp
+                });
+            } catch(e) {
+                console.error("Erro no Facebook Pixel:", e);
+            }
 
             // 3. Dispara GTM
-            window.dataLayer = window.dataLayer || [];
-            dataLayer.push({
-                'event': 'purchase_downsell',
-                'value': 19.90,
-                'currency': 'BRL',
-                'fbclid': fbclid,
-                'fbc': fbc,
-                'fbp': fbp
-            });
+            try {
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
+                    'event': 'purchase_downsell',
+                    'value': 19.90,
+                    'currency': 'BRL',
+                    'fbclid': fbclid,
+                    'fbc': fbc,
+                    'fbp': fbp
+                });
+            } catch(e) {
+                console.error("Erro no dataLayer:", e);
+            }
 
             // 4. Debug (apenas em modo teste)
-            if(new URLSearchParams(location.search).has('debug')) {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.has('debug')) {
                 console.table({
                     'FBClID': fbclid,
                     'Fonte FBClID': fbclid === 'N/A' ? 'Não encontrado' : 
@@ -75,7 +93,11 @@
         }
         
         // Dispara quando a página carregar
-        window.addEventListener('DOMContentLoaded', trackPurchase);
+        if(document.readyState === 'complete') {
+            trackPurchase();
+        } else {
+            window.addEventListener('DOMContentLoaded', trackPurchase);
+        }
     </script>
 </head>
 <body style="font-family: Arial; text-align: center; padding: 50px; background: #f5f5f5;">
@@ -89,13 +111,29 @@
     <p>Aguarde, você será redirecionado...</p>
     
     <script>
-        // Redirecionamento controlado
+        // Redirecionamento seguro e condicional
         const urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.get('debug') !== 'true') {
-            setTimeout(function() {
+        
+        // Fluxo normal (sem debug)
+        if (!urlParams.has('debug')) {
+            // Armazena fbclid da URL se existir
+            if(urlParams.has('fbclid')) {
+                const fbclid = urlParams.get('fbclid');
+                try {
+                    localStorage.setItem('ultimo_fbclid', fbclid);
+                    document.cookie = `fbclid=${fbclid}; path=/; max-age=2592000; SameSite=Lax`;
+                } catch(e) {
+                    console.error("Erro ao armazenar fbclid:", e);
+                }
+            }
+            
+            // Redireciona após 3 segundos
+            setTimeout(() => {
                 window.location.href = "https://compra-confirmada.my.canva.site";
             }, 3000);
-        } else {
+        }
+        // Modo debug (apenas exibe mensagem)
+        else {
             console.log("Modo debug ativo - Redirecionamento desativado.");
         }
     </script>
