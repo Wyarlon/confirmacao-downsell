@@ -5,15 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compra Confirmada - R$50,00</title>
     
-    <!-- Camada de Dados (Data Layer) para o GTM -->
+    <!-- Camada de Dados para GTM -->
     <script>
         window.dataLayer = window.dataLayer || [];
         dataLayer.push({
-            event: "purchase_downsell",  // Nome do evento no GTM
-            Value: 50.00,                // Valor numérico (sem aspas)
-            Currency: "BRL",             // Moeda em maiúsculas
-            content_ids: ['downsell_offer'],  // IDs dos produtos
-            content_type: 'product'      // Tipo de conteúdo
+            event: "purchase_downsell",
+            Value: 50.00,                // Valor decimal
+            Currency: "BRL",              // Moeda formatada
+            content_ids: ['downsell_offer'], // IDs corretos
+            content_type: 'product',
+            fbclid: new URLSearchParams(location.search).get('fbclid') || '' // Captura da URL
         });
     </script>
 
@@ -24,44 +25,70 @@
         j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
         f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
-    <!-- Fim do Google Tag Manager -->
+    <!-- End Google Tag Manager -->
 
-    <!-- Código do Facebook Pixel -->
+    <!-- Facebook Pixel Configuração Atualizada -->
     <script>
-        // Configuração básica do Pixel
-        !function(f,b,e,v,n,t,s){
-            if(f.fbq)return;
-            n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-            n.queue=[];t=b.createElement(e);t.async=!0;
-            t.src=v;s=b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t,s)
-        }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-        
-        fbq('init', '1345211853386206');  // ID do seu Pixel
-        fbq('track', 'PageView');         // Rastreamento de página
-
-        // Função para rastrear a compra
-        function trackPurchase() {
-            fbq('track', 'Purchase', {
-                value: 50.00,             // Valor da compra
-                currency: 'BRL',          // Moeda (Real Brasileiro)
-                content_ids: ['downsell_offer'],  // ID do produto
-                content_type: 'product',  // Tipo de conteúdo
-                fbclid: new URLSearchParams(location.search).get('fbclid') || '',  // FB Click ID
-                fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || '',  // Cookie _fbc
-                fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || ''   // Cookie _fbp
-            });
+        // 1. INICIALIZAÇÃO DO PIXEL
+        if(!window._pixelInitDone) {
+            window._pixelInitDone = true;
+            
+            !function(f,b,e,v,n,t,s){
+                if(f.fbq)return;
+                n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+                n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t,s)
+            }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+            
+            fbq('init', '1345211853386206');
+            fbq('track', 'PageView');
         }
-        
-        // Dispara a função quando a página carregar
+
+        // 2. FUNÇÃO DE COMPRA ATUALIZADA
+        function trackPurchase() {
+            const isDebug = new URLSearchParams(location.search).has('debug');
+            const fbclid = new URLSearchParams(location.search).get('fbclid') || '';
+            
+            // Dados corrigidos
+            const eventData = {
+                value: 50.00,              // Valor atualizado
+                currency: 'BRL',
+                content_ids: ['downsell_offer'], // Nome corrigido
+                content_type: 'product',
+                fbclid: fbclid,
+                fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || '',
+                fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || ''
+            };
+
+            // Disparo dos eventos
+            fbq('track', 'Purchase', eventData);
+            
+            // Atualização do dataLayer
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+                'event': 'purchase_downsell',
+                ...eventData
+            });
+
+            // Debug aprimorado
+            if(isDebug) {
+                console.log('✅ Rastreamento concluído', {
+                    'FBClID': fbclid || 'Não encontrado',
+                    'Valor': eventData.value,
+                    'Dados Enviados': eventData
+                });
+            }
+        }
+
+        // Disparo seguro
         if(document.readyState === 'complete') {
             trackPurchase();
         } else {
-            window.addEventListener('load', trackPurchase);
+            window.addEventListener('DOMContentLoaded', trackPurchase);
         }
     </script>
-    <!-- Fallback para navegadores sem JavaScript -->
     <noscript>
         <img height="1" width="1" style="display:none" 
              src="https://www.facebook.com/tr?id=1345211853386206&ev=Purchase&noscript=1"/>
@@ -71,20 +98,18 @@
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3SZTP8L"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- Fim do Google Tag Manager (noscript) -->
+    <!-- End Google Tag Manager (noscript) -->
     
     <h1>✅ Compra confirmada!</h1>
     <p>Obrigado por adquirir nossa oferta especial por <strong>R$50,00</strong>.</p>
     <p>Aguarde, você será redirecionado...</p>
     
-    <!-- Redirecionamento automático (3 segundos) -->
     <script>
+        // REDIRECIONAMENTO
         if(!new URLSearchParams(location.search).has('debug')) {
             setTimeout(() => {
                 window.location.href = "https://compra-confirmada.my.canva.site";
             }, 3000);
-        } else {
-            console.log('Modo debug ativo - Redirecionamento desabilitado');
         }
     </script>
 </body>
