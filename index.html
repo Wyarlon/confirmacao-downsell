@@ -14,62 +14,65 @@
     })(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
     <!-- End Google Tag Manager -->
 
-    <!-- Facebook Pixel Configuração Atualizada -->
+    <!-- Facebook Pixel & DataLayer Atualizados -->
     <script>
-        // 1. INICIALIZAÇÃO DO PIXEL
+        // 1. CAPTURA DOS PARÂMETROS FACEBOOK (fbclid, fbc, fbp)
+        const getFacebookParams = () => ({
+            fbclid: localStorage.getItem('ultimo_fbclid') || 'not_found', // Captura do localStorage
+            fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || 'not_found',
+            fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || 'not_found'
+        });
+
+        // 2. CONFIGURAÇÃO DO PIXEL FACEBOOK
         if(!window._pixelInitDone) {
             window._pixelInitDone = true;
-            
             !function(f,b,e,v,n,t,s){
-                if(f.fbq)return;
-                n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-                n.queue=[];t=b.createElement(e);t.async=!0;
-                t.src=v;s=b.getElementsByTagName(e)[0];
-                s.parentNode.insertBefore(t,s)
+                if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+                t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
             }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
             
             fbq('init', '1345211853386206');
             fbq('track', 'PageView');
         }
 
-        // 2. FUNÇÃO DE COMPRA ATUALIZADA
+        // 3. DISPARO DO EVENTO DE COMPRA
         function trackPurchase() {
-            const isDebug = new URLSearchParams(location.search).has('debug');
-            const fbclid = new URLSearchParams(location.search).get('fbclid') || '';
-            
-            // Dados padronizados
+            const fbParams = getFacebookParams();
+            const debugMode = new URLSearchParams(location.search).has('debug');
+
+            // Dados padronizados para GTM e Facebook
             const eventData = {
-                value: 19.90,             
+                value: 19.90,
                 currency: 'BRL',
                 content_ids: ['downsell_offer'],
                 content_type: 'product',
-                fbclid: fbclid,
-                fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || '',
-                fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || ''
+                fbclid: fbParams.fbclid,
+                fbclid_storage: fbParams.fbclid, // Para o GTM
+                fbc: fbParams.fbc,
+                fbp: fbParams.fbp
             };
 
-            // Disparo do evento no Facebook Pixel
+            // Envia para Facebook Pixel
             fbq('track', 'Purchase', eventData);
-            
-            // Envio único para o dataLayer
+
+            // Envia para GTM (apenas uma vez)
             window.dataLayer = window.dataLayer || [];
             dataLayer.push({
                 'event': 'purchase_downsell',
                 ...eventData
             });
 
-            // Debug aprimorado
-            if(isDebug) {
-                console.log('✅ Rastreamento concluído', {
-                    'FBClID': fbclid || 'Não encontrado',
-                    'Valor': eventData.value,
-                    'Dados Enviados': eventData
+            if(debugMode) {
+                console.log('✅ Dados enviados:', {
+                    'FB Params': fbParams,
+                    'Event Data': eventData,
+                    'DataLayer': window.dataLayer
                 });
             }
         }
 
-        // Disparo seguro - apenas uma vez
+        // Disparo seguro (sem duplicação)
         if(document.readyState === 'complete') {
             trackPurchase();
         } else {
@@ -92,7 +95,7 @@
     <p>Aguarde, você será redirecionado...</p>
     
     <script>
-        // REDIRECIONAMENTO
+        // Redirecionamento (opcional)
         if(!new URLSearchParams(location.search).has('debug')) {
             setTimeout(() => {
                 window.location.href = "https://compra-confirmada.my.canva.site";
