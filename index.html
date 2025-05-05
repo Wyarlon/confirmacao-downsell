@@ -14,62 +14,36 @@
     })(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
     <!-- End Google Tag Manager -->
 
-    <!-- Facebook Pixel Configuração Simplificada -->
+    <!-- Facebook Pixel - Código Simplificado e Testado -->
     <script>
-        // 1. INICIALIZAÇÃO DO PIXEL (com verificação anti-duplicação)
-        if(!window._pixelInitDone) {
-            window._pixelInitDone = true;
-            !function(f,b,e,v,n,t,s){
-                if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-                if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-                t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
-            }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-            
-            fbq('init', '1345211853386206');
-            fbq('track', 'PageView');
-        }
+        // 1. Configuração básica do Pixel
+        !function(f,b,e,v,n,t,s){
+            if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+            if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+            t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
+        }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        
+        fbq('init', '1345211853386206'); // Seu Pixel ID
+        fbq('track', 'PageView');
 
-        // 2. DISPARO DO EVENTO DE COMPRA (versão correta)
-function trackPurchase() {
-    const fbclid = localStorage.getItem("ultimo_fbclid") || ''; // Nome corrigido
-    const debugMode = new URLSearchParams(location.search).has('debug'); // Método corrigido
+        // 2. Disparo do evento Purchase (versão direta)
+        const fbclid = localStorage.getItem('ultimo_fbclid') || '';
+        fbq('track', 'Purchase', {
+            value: 19.90,
+            currency: 'BRL',
+            content_ids: ['downsell_offer'],
+            content_type: 'product',
+            fbclid: fbclid
+        });
 
-    // Dados para Facebook Pixel (CORRIGIDOS):
-    fbq('track', 'Purchase', { // Evento com "P" maiúsculo
-        value: 19.90, // Nome correto
-        currency: 'BRL', // Código de moeda correto
-        content_ids: ['downsell_offer'], // Formato correto
-        content_type: 'product', // Sintaxe correta
-        fbclid: fbclid, // Nome corrigido
-        fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || '', // Regex correto
-        fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || ''  // Regex correto
-    });
-
-    // Dados para GTM (CORRIGIDOS):
-    window.dataLayer = window.dataLayer || []; // Nome corrigido
-    dataLayer.push({
-        event: 'purchase_downsell', // Nome corrigido
-        value: 19.90,
-        currency: 'BRL',
-        fbclid: fbclid
-    });
-}
-
-            if(debugMode) {
-                console.log('Dados enviados:', {
-                    fbclid: fbclid,
-                    value: 19.90,
-                    content_ids: ['downsell_offer']
-                });
-            }
-        }
-
-        // Disparo seguro (sem duplicação)
-        if(document.readyState === 'complete') {
-            trackPurchase();
-        } else {
-            window.addEventListener('DOMContentLoaded', trackPurchase, {once: true});
-        }
+        // 3. DataLayer para GTM (opcional)
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+            event: 'purchase_downsell',
+            value: 19.90,
+            currency: 'BRL',
+            fbclid: fbclid
+        });
     </script>
     <noscript>
         <img height="1" width="1" style="display:none" 
