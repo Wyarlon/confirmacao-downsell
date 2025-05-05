@@ -14,16 +14,9 @@
     })(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
     <!-- End Google Tag Manager -->
 
-    <!-- Facebook Pixel & DataLayer Atualizados -->
+    <!-- Facebook Pixel Configuração Simplificada -->
     <script>
-        // 1. CAPTURA DOS PARÂMETROS FACEBOOK (fbclid, fbc, fbp)
-        const getFacebookParams = () => ({
-            fbclid: localStorage.getItem('ultimo_fbclid') || 'not_found', // Captura do localStorage
-            fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || 'not_found',
-            fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || 'not_found'
-        });
-
-        // 2. CONFIGURAÇÃO DO PIXEL FACEBOOK
+        // 1. INICIALIZAÇÃO DO PIXEL (com verificação anti-duplicação)
         if(!window._pixelInitDone) {
             window._pixelInitDone = true;
             !function(f,b,e,v,n,t,s){
@@ -36,38 +29,34 @@
             fbq('track', 'PageView');
         }
 
-        // 3. DISPARO DO EVENTO DE COMPRA
+        // 2. DISPARO DO EVENTO DE COMPRA (versão simplificada)
         function trackPurchase() {
-            const fbParams = getFacebookParams();
+            const fbclid = localStorage.getItem('ultimo_fbclid') || ''; // Apenas fbclid do localStorage
             const debugMode = new URLSearchParams(location.search).has('debug');
 
-            // Dados padronizados para GTM e Facebook
-            const eventData = {
+            // Dados para Facebook Pixel
+            fbq('track', 'Purchase', {
                 value: 19.90,
                 currency: 'BRL',
-                content_ids: ['downsell_offer'],
-                content_type: 'product',
-                fbclid: fbParams.fbclid,
-                fbclid_storage: fbParams.fbclid, // Para o GTM
-                fbc: fbParams.fbc,
-                fbp: fbParams.fbp
-            };
+                content_ids: ['downsell_offer'], // IDs dos produtos
+                content_type: 'product',        // Categoria geral
+                fbclid: fbclid                  // Único parâmetro fbclid
+            });
 
-            // Envia para Facebook Pixel
-            fbq('track', 'Purchase', eventData);
-
-            // Envia para GTM (apenas uma vez)
+            // Dados para GTM (opcional)
             window.dataLayer = window.dataLayer || [];
             dataLayer.push({
-                'event': 'purchase_downsell',
-                ...eventData
+                event: 'purchase_downsell',
+                value: 19.90,
+                currency: 'BRL',
+                fbclid: fbclid                  // Mesmo nome para consistência
             });
 
             if(debugMode) {
-                console.log('✅ Dados enviados:', {
-                    'FB Params': fbParams,
-                    'Event Data': eventData,
-                    'DataLayer': window.dataLayer
+                console.log('Dados enviados:', {
+                    fbclid: fbclid,
+                    value: 19.90,
+                    content_ids: ['downsell_offer']
                 });
             }
         }
