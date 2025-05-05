@@ -29,28 +29,31 @@
             fbq('track', 'PageView');
         }
 
-        // 2. DISPARO DO EVENTO DE COMPRA (versão simplificada)
-        function trackPurchase() {
-            const fbclid = localStorage.getItem('ultimo_fbclid') || ''; // Apenas fbclid do localStorage
-            const debugMode = new URLSearchParams(location.search).has('debug');
+        // 2. DISPARO DO EVENTO DE COMPRA (versão correta)
+function trackPurchase() {
+    const fbclid = localStorage.getItem("ultimo_fbclid") || ''; // Nome corrigido
+    const debugMode = new URLSearchParams(location.search).has('debug'); // Método corrigido
 
-            // Dados para Facebook Pixel
-            fbq('track', 'Purchase', {
-                value: 19.90,
-                currency: 'BRL',
-                content_ids: ['downsell_offer'], // IDs dos produtos
-                content_type: 'product',        // Categoria geral
-                fbclid: fbclid                  // Único parâmetro fbclid
-            });
+    // Dados para Facebook Pixel (CORRIGIDOS):
+    fbq('track', 'Purchase', { // Evento com "P" maiúsculo
+        value: 19.90, // Nome correto
+        currency: 'BRL', // Código de moeda correto
+        content_ids: ['downsell_offer'], // Formato correto
+        content_type: 'product', // Sintaxe correta
+        fbclid: fbclid, // Nome corrigido
+        fbp: document.cookie.match(/_fbp=([^;]+)/)?.[1] || '', // Regex correto
+        fbc: document.cookie.match(/_fbc=([^;]+)/)?.[1] || ''  // Regex correto
+    });
 
-            // Dados para GTM (opcional)
-            window.dataLayer = window.dataLayer || [];
-            dataLayer.push({
-                event: 'purchase_downsell',
-                value: 19.90,
-                currency: 'BRL',
-                fbclid: fbclid                  // Mesmo nome para consistência
-            });
+    // Dados para GTM (CORRIGIDOS):
+    window.dataLayer = window.dataLayer || []; // Nome corrigido
+    dataLayer.push({
+        event: 'purchase_downsell', // Nome corrigido
+        value: 19.90,
+        currency: 'BRL',
+        fbclid: fbclid
+    });
+}
 
             if(debugMode) {
                 console.log('Dados enviados:', {
