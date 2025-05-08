@@ -5,6 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compra Confirmada - R$19,90</title>
     
+    <!-- [ALTERAÇÃO PRINCIPAL] Script de atualização do fbclid -->
+    <script>
+    // 1. PRIORIZA FBclID DA URL (NOVO CÓDIGO ADICIONADO)
+    (function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('fbclid')) {
+            const newFbclid = urlParams.get('fbclid');
+            localStorage.setItem('ultimo_fbclid', newFbclid);
+            
+            // Debug opcional
+            if(urlParams.has('debug')) {
+                console.log('[DEBUG] FBclID atualizado:', {
+                    daURL: newFbclid,
+                    noStorage: localStorage.getItem('ultimo_fbclid')
+                });
+            }
+        }
+    })();
+    </script>
+
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){
         w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
@@ -14,9 +34,8 @@
     })(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
     <!-- End Google Tag Manager -->
 
-    <!-- Facebook Pixel - Versão Correta -->
+    <!-- Facebook Pixel - [MODIFICADO SOMENTE A ORDEM DE LEITURA] -->
     <script>
-        // 1. CONFIGURAÇÃO BÁSICA DO PIXEL
         !function(f,b,e,v,n,t,s){
             if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
             if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
@@ -26,23 +45,22 @@
         fbq('init', '1345211853386206');
         fbq('track', 'PageView');
 
-        // 2. DISPARO DO EVENTO (com cookies automáticos)
-        const fbclid = localStorage.getItem('ultimo_fbclid') || '';
+        // [ALTERADO] Agora usa o valor já atualizado pelo script acima
         fbq('track', 'Purchase', {
             value: 19.90,
             currency: 'BRL',
             content_ids: ['downsell_offer'],
             content_type: 'product',
-            fbclid: fbclid // O Pixel automaticamente gerará fbc/fbp novos
+            fbclid: localStorage.getItem('ultimo_fbclid') || ''
         });
 
-        // 3. DATALAYER PARA GTM (opcional)
+        // DATALAYER (inalterado)
         window.dataLayer = window.dataLayer || [];
         dataLayer.push({
             event: 'purchase_downsell',
             value: 19.90,
             currency: 'BRL',
-            fbclid: fbclid
+            fbclid: localStorage.getItem('ultimo_fbclid') || ''
         });
     </script>
     <noscript>
@@ -61,7 +79,7 @@
     <p>Aguarde, você será redirecionado...</p>
     
     <script>
-        // Redirecionamento (opcional)
+        // Redirecionamento (inalterado)
         if(!new URLSearchParams(location.search).has('debug')) {
             setTimeout(() => {
                 window.location.href = "https://compra-confirmada.my.canva.site";
