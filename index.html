@@ -5,6 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compra Confirmada - R$19,90</title>
     
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Google Analytics com Debug Ativo -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9W9CLWXYRG"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      
+      // Configuração com debug ativo
+      gtag('config', 'G-9W9CLWXYRG', { 
+        'debug_mode': true,
+        'send_page_view': false
+      });
+    </script>
+
     <!-- Script de captura de dados -->
     <script>
     // Captura todos os parâmetros importantes
@@ -18,7 +40,7 @@
             offer_type: 'downsell'
         };
 
-        // Armazena no localStorage (opcional)
+        // Armazena no localStorage
         if(clientData.fbclid) localStorage.setItem('ultimo_fbclid', clientData.fbclid);
         if(clientData.whatsapp_number) localStorage.setItem('client_whatsapp', clientData.whatsapp_number);
 
@@ -28,15 +50,22 @@
             event: 'purchase_completed',
             client_data: clientData
         });
+
+        // Debug no console
+        console.log('Evento purchase_completed disparado:', clientData);
     })();
     </script>
 
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){/* GTM padrão */})(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
-
     <!-- Facebook Pixel -->
     <script>
-    !function(f,b,e,v,n,t,s){/* Pixel padrão */}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '1345211853386206');
     fbq('track', 'PageView');
     fbq('track', 'Purchase', {
@@ -49,7 +78,11 @@
     </script>
 </head>
 <body style="font-family: Arial; text-align: center; padding: 50px; background: #f5f5f5;">
-    <!-- Conteúdo existente mantido igual -->
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3SZTP8L"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
     <h1>✅ Compra confirmada!</h1>
     <p>Obrigado por adquirir nossa oferta especial por <strong>R$19,90</strong>.</p>
     <p>Aguarde, você será redirecionado...</p>
