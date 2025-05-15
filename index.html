@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compra Confirmada - R$19,90</title>
+    <title>DEBUG - Página de Confirmação</title>
     
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){
@@ -30,83 +30,135 @@
       });
     </script>
 
-    <!-- Script de Debug Avançado -->
-    <script>
-    // Verifica se está no GitHub Pages
-    const isGitHub = window.location.host.includes('github.io');
-    
-    // Função para mostrar debug no console
-    function showDebugInfo(data) {
-        console.group('🔍 Debug - purchase_completed');
-        console.log('📊 Dados enviados:', data);
-        console.log('🌐 URL:', window.location.href);
-        console.log('🕒 Timestamp:', new Date().toISOString());
-        console.groupEnd();
-        
-        // Mostra alerta visual se estiver no GitHub
-        if(isGitHub) {
-            const debugDiv = document.createElement('div');
-            debugDiv.style = 'position:fixed;top:0;left:0;background:#f8f9fa;padding:10px;z-index:9999;font-family:Arial;border:1px solid #ddd;';
-            debugDiv.innerHTML = `
-                <h3 style="margin:0 0 5px 0;color:#4285f4;">DEBUG ATIVO</h3>
-                <p style="margin:0;"><strong>Evento:</strong> purchase_completed</p>
-                <p style="margin:0;"><strong>Valor:</strong> R$${data.value}</p>
-                <p style="margin:0;"><strong>WhatsApp:</strong> ${data.whatsapp_number || 'Não capturado'}</p>
-            `;
-            document.body.prepend(debugDiv);
+    <style>
+        .debug-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #f8f9fa;
+            padding: 15px;
+            z-index: 9999;
+            font-family: Arial;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-    }
-
-    // Captura de dados com debug
-    (function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const clientData = {
-            fbclid: urlParams.get('fbclid') || localStorage.getItem('ultimo_fbclid') || '',
-            whatsapp_number: urlParams.get('whatsapp_number') || '',
-            value: 19.90,
-            currency: 'BRL',
-            offer_type: 'downsell'
-        };
-
-        // Armazenamento e envio
-        if(clientData.fbclid) localStorage.setItem('ultimo_fbclid', clientData.fbclid);
-        if(clientData.whatsapp_number) localStorage.setItem('client_whatsapp', clientData.whatsapp_number);
-
-        // Dispara evento
-        window.dataLayer = window.dataLayer || [];
-        dataLayer.push({
-            event: 'purchase_completed',
-            client_data: clientData
-        });
-
-        // Debug avançado
-        showDebugInfo(clientData);
-        
-        // Verifica conexão com GA4
-        setTimeout(() => {
-            if(!window.gaDebug) {
-                console.warn('⚠️ GA4 Debug não detectado. Verifique:');
-                console.log('1. Se o fluxo de dados está correto no GA4');
-                console.log('2. Se o GTM está publicado');
-                console.log('3. Se há bloqueadores de script ativos');
-            }
-        }, 2000);
-    })();
-    </script>
+        .debug-btn {
+            padding: 8px 15px;
+            margin: 0 5px;
+            background: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .debug-btn.red {
+            background: #ea4335;
+        }
+        .debug-btn.green {
+            background: #34a853;
+        }
+    </style>
 </head>
-<body style="font-family: Arial; text-align: center; padding: 50px; background: #f5f5f5;">
+<body style="font-family: Arial; text-align: center; padding-top: 100px; background: #f5f5f5;">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3SZTP8L"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
+    <!-- Painel de Debug -->
+    <div class="debug-panel">
+        <h3 style="margin:0 0 10px 0;color:#4285f4;">PAINEL DE DEBUG - MODO DESENVOLVEDOR</h3>
+        <button class="debug-btn" onclick="window.location.reload()">Recarregar Página</button>
+        <button class="debug-btn green" onclick="simularRedirecionamento()">Simular Redirecionamento (5s)</button>
+        <button class="debug-btn red" onclick="limparLocalStorage()">Limpar LocalStorage</button>
+        <span id="debug-status" style="margin-left:15px;font-weight:bold;color:#4285f4;"></span>
+    </div>
+
     <h1>✅ Compra confirmada!</h1>
     <p>Obrigado por adquirir nossa oferta especial por <strong>R$19,90</strong>.</p>
-    <p>Aguarde, você será redirecionado...</p>
+    <p id="redirect-message">Você será redirecionado automaticamente em <span id="countdown">5</span> segundos...</p>
     
+    <div style="margin:30px auto;max-width:600px;text-align:left;padding:20px;background:white;border:1px solid #eee;">
+        <h3>📊 Dados do Evento Capturados:</h3>
+        <pre id="debug-output" style="background:#f5f5f5;padding:10px;overflow:auto;"></pre>
+    </div>
+
     <script>
-        setTimeout(() => {
-            window.location.href = "https://compra-confirmada.my.canva.site";
-        }, 5000);
+        // Variáveis de controle
+        let debugMode = true;
+        let redirectTimer;
+        let countdown = 5;
+
+        // Elementos DOM
+        const countdownEl = document.getElementById('countdown');
+        const redirectMessageEl = document.getElementById('redirect-message');
+        const debugOutputEl = document.getElementById('debug-output');
+        const debugStatusEl = document.getElementById('debug-status');
+
+        // Função para simular redirecionamento
+        function simularRedirecionamento() {
+            debugStatusEl.textContent = "Redirecionando em 5s...";
+            startCountdown();
+        }
+
+        // Função para iniciar contagem regressiva
+        function startCountdown() {
+            clearInterval(redirectTimer);
+            countdown = 5;
+            redirectTimer = setInterval(() => {
+                countdown--;
+                countdownEl.textContent = countdown;
+                if(countdown <= 0) {
+                    clearInterval(redirectTimer);
+                    window.location.href = "https://compra-confirmada.my.canva.site";
+                }
+            }, 1000);
+        }
+
+        // Função para limpar localStorage
+        function limparLocalStorage() {
+            localStorage.removeItem('ultimo_fbclid');
+            localStorage.removeItem('client_whatsapp');
+            debugStatusEl.textContent = "LocalStorage limpo com sucesso!";
+            setTimeout(() => { debugStatusEl.textContent = ""; }, 3000);
+            loadDebugData();
+        }
+
+        // Função para mostrar dados de debug
+        function loadDebugData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const debugData = {
+                fbclid: urlParams.get('fbclid') || localStorage.getItem('ultimo_fbclid') || 'Não capturado',
+                whatsapp_number: urlParams.get('whatsapp_number') || localStorage.getItem('client_whatsapp') || 'Não capturado',
+                value: 19.90,
+                currency: 'BRL',
+                offer_type: 'downsell',
+                debug_mode: debugMode,
+                timestamp: new Date().toISOString()
+            };
+
+            debugOutputEl.textContent = JSON.stringify(debugData, null, 2);
+            
+            // Envia para dataLayer (GA4/GTM)
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+                event: 'purchase_completed',
+                client_data: debugData
+            });
+
+            console.log('📢 Evento purchase_completed disparado:', debugData);
+        }
+
+        // Inicialização
+        if(debugMode) {
+            redirectMessageEl.style.display = 'none';
+            debugStatusEl.textContent = "Modo Debug Ativo - Redirecionamento desabilitado";
+        } else {
+            startCountdown();
+        }
+
+        // Carrega os dados iniciais
+        loadDebugData();
     </script>
 </body>
 </html>
