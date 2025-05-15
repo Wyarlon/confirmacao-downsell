@@ -6,30 +6,58 @@
     <title>Compra Confirmada - R$19,90</title>
     
     <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    <script>(function(w,d,s,l,i){
+        w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});
+        var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+        j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+        f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-K3SZTP8L');</script>
     <!-- End Google Tag Manager -->
 
-    <!-- Google Analytics com Debug Ativo -->
+    <!-- Google Analytics com Debug Forçado -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9W9CLWXYRG"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       
-      // Configuração com debug ativo
-      gtag('config', 'G-9W9CLWXYRG', { 
-        'debug_mode': true,
-        'send_page_view': false
+      // Configuração com debug SEMPRE ativo
+      gtag('config', 'G-9W9CLWXYRG', {
+        debug_mode: true,
+        send_page_view: false
       });
     </script>
 
-    <!-- Script de captura de dados -->
+    <!-- Script de Debug Avançado -->
     <script>
-    // Captura todos os parâmetros importantes
+    // Verifica se está no GitHub Pages
+    const isGitHub = window.location.host.includes('github.io');
+    
+    // Função para mostrar debug no console
+    function showDebugInfo(data) {
+        console.group('🔍 Debug - purchase_completed');
+        console.log('📊 Dados enviados:', data);
+        console.log('🌐 URL:', window.location.href);
+        console.log('🕒 Timestamp:', new Date().toISOString());
+        console.groupEnd();
+        
+        // Mostra alerta visual se estiver no GitHub
+        if(isGitHub) {
+            const debugDiv = document.createElement('div');
+            debugDiv.style = 'position:fixed;top:0;left:0;background:#f8f9fa;padding:10px;z-index:9999;font-family:Arial;border:1px solid #ddd;';
+            debugDiv.innerHTML = `
+                <h3 style="margin:0 0 5px 0;color:#4285f4;">DEBUG ATIVO</h3>
+                <p style="margin:0;"><strong>Evento:</strong> purchase_completed</p>
+                <p style="margin:0;"><strong>Valor:</strong> R$${data.value}</p>
+                <p style="margin:0;"><strong>WhatsApp:</strong> ${data.whatsapp_number || 'Não capturado'}</p>
+            `;
+            document.body.prepend(debugDiv);
+        }
+    }
+
+    // Captura de dados com debug
     (function() {
         const urlParams = new URLSearchParams(window.location.search);
         const clientData = {
@@ -40,48 +68,36 @@
             offer_type: 'downsell'
         };
 
-        // Armazena no localStorage
+        // Armazenamento e envio
         if(clientData.fbclid) localStorage.setItem('ultimo_fbclid', clientData.fbclid);
         if(clientData.whatsapp_number) localStorage.setItem('client_whatsapp', clientData.whatsapp_number);
 
-        // Envia para dataLayer
+        // Dispara evento
         window.dataLayer = window.dataLayer || [];
         dataLayer.push({
             event: 'purchase_completed',
             client_data: clientData
         });
 
-        // Debug no console
-        console.log('Evento purchase_completed disparado:', clientData);
+        // Debug avançado
+        showDebugInfo(clientData);
+        
+        // Verifica conexão com GA4
+        setTimeout(() => {
+            if(!window.gaDebug) {
+                console.warn('⚠️ GA4 Debug não detectado. Verifique:');
+                console.log('1. Se o fluxo de dados está correto no GA4');
+                console.log('2. Se o GTM está publicado');
+                console.log('3. Se há bloqueadores de script ativos');
+            }
+        }, 2000);
     })();
-    </script>
-
-    <!-- Facebook Pixel -->
-    <script>
-    !function(f,b,e,v,n,t,s)
-    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];
-    s.parentNode.insertBefore(t,s)}(window, document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1345211853386206');
-    fbq('track', 'PageView');
-    fbq('track', 'Purchase', {
-        value: 19.90,
-        currency: 'BRL',
-        content_ids: ['downsell_offer'],
-        content_type: 'product',
-        fbclid: localStorage.getItem('ultimo_fbclid') || ''
-    });
     </script>
 </head>
 <body style="font-family: Arial; text-align: center; padding: 50px; background: #f5f5f5;">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3SZTP8L"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
     
     <h1>✅ Compra confirmada!</h1>
     <p>Obrigado por adquirir nossa oferta especial por <strong>R$19,90</strong>.</p>
