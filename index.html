@@ -30,6 +30,19 @@
       });
     </script>
 
+    <!-- Facebook Pixel -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1345211853386206');
+    </script>
+
     <style>
         .debug-panel {
             position: fixed;
@@ -127,8 +140,10 @@
         // Função para mostrar dados de debug
         function loadDebugData() {
             const urlParams = new URLSearchParams(window.location.search);
+            const currentFbclid = localStorage.getItem('ultimo_fbclid') || urlParams.get('fbclid') || 'Não capturado';
+            
             const debugData = {
-                fbclid: urlParams.get('fbclid') || localStorage.getItem('ultimo_fbclid') || 'Não capturado',
+                fbclid: currentFbclid,
                 whatsapp_number: urlParams.get('whatsapp_number') || localStorage.getItem('client_whatsapp') || 'Não capturado',
                 value: 19.90,
                 currency: 'BRL',
@@ -146,7 +161,17 @@
                 client_data: debugData
             });
 
+            // Dispara Facebook Pixel
+            fbq('track', 'Purchase', {
+                value: 19.90,
+                currency: 'BRL',
+                content_ids: ['downsell_offer'],
+                content_type: 'product',
+                fbclid: currentFbclid
+            });
+
             console.log('📢 Evento purchase_completed disparado:', debugData);
+            console.log('📌 FB Pixel disparado com fbclid:', currentFbclid);
         }
 
         // Inicialização
