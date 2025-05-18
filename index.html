@@ -140,7 +140,11 @@
         // Função para mostrar dados de debug
         function loadDebugData() {
             const urlParams = new URLSearchParams(window.location.search);
-            const currentFbclid = localStorage.getItem('ultimo_fbclid') || urlParams.get('fbclid') || 'Não capturado';
+           const fbclidDaURL = urlParams.get('fbclid'); // Pega da URL primeiro
+if (fbclidDaURL) {
+    localStorage.setItem('ultimo_fbclid', fbclidDaURL); // Atualiza LocalStorage se existir na URL
+}
+const currentFbclid = fbclidDaURL || localStorage.getItem('ultimo_fbclid') || 'Não capturado';
             
             const debugData = {
                 fbclid: currentFbclid,
