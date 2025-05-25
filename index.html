@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Confirmação</title>
+    <title>Compra Confirmada</title>
     
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){
@@ -22,13 +22,7 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-      
-      // Configuração do GA4 (debug_mode só ativo com ?debug=true)
-      const urlParams = new URLSearchParams(window.location.search);
-      gtag('config', 'G-9W9CLWXYRG', {
-        debug_mode: urlParams.has('debug'),
-        send_page_view: true
-      });
+      gtag('config', 'G-9W9CLWXYRG');
     </script>
 
     <!-- Facebook Pixel -->
@@ -44,162 +38,54 @@
     fbq('init', '1345211853386206');
     fbq('track', 'PageView');
     </script>
-
-    <style>
-        .debug-panel {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #f8f9fa;
-            padding: 15px;
-            z-index: 9999;
-            font-family: Arial;
-            border-bottom: 1px solid #ddd;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: none;
-        }
-        .debug-btn {
-            padding: 8px 15px;
-            margin: 0 5px;
-            background: #4285f4;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .debug-data {
-            display: none;
-            margin:30px auto;
-            max-width:600px;
-            text-align:left;
-            padding:20px;
-            background:white;
-            border:1px solid #eee;
-        }
-    </style>
 </head>
-<body style="font-family: Arial; text-align: center; padding-top: 100px; background: #f5f5f5;">
+<body style="font-family: Arial; text-align: center; padding-top: 100px;">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3SZTP8L"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    
-    <!-- Painel de Debug (só aparece com ?debug=true) -->
-    <div class="debug-panel" id="debugPanel">
-        <h3 style="margin:0 0 10px 0;color:#4285f4;">PAINEL DE DEBUG - MODO DESENVOLVEDOR</h3>
-        <button class="debug-btn" onclick="window.location.reload()">Recarregar Página</button>
-        <button class="debug-btn" style="background:#34a853" onclick="simularRedirecionamento()">Simular Redirecionamento</button>
-        <button class="debug-btn" style="background:#ea4335" onclick="limparLocalStorage()">Limpar LocalStorage</button>
-        <span id="debug-status" style="margin-left:15px;font-weight:bold;color:#4285f4;"></span>
-    </div>
 
     <h1>✅ Compra confirmada!</h1>
     <p>Obrigado por adquirir nossa oferta especial por <strong>R$19,90</strong>.</p>
-    <p id="redirect-message">Você será redirecionado automaticamente em <span id="countdown">5</span> segundos...</p>
-    
-    <!-- Dados de Debug (só aparece com ?debug=true) -->
-    <div class="debug-data" id="debugData">
-        <h3>📊 Dados do Evento Capturados:</h3>
-        <pre id="debug-output" style="background:#f5f5f5;padding:10px;overflow:auto;"></pre>
-    </div>
+    <p>Você será redirecionado automaticamente em <span id="countdown">5</span> segundos...</p>
 
     <script>
-        // Verifica se deve mostrar debug
-        const urlParams = new URLSearchParams(window.location.search);
-        const debugMode = urlParams.has('debug');
-        
-        // Mostra elementos de debug se necessário
-        if(debugMode) {
-            document.getElementById('debugPanel').style.display = 'block';
-            document.getElementById('debugData').style.display = 'block';
-            document.getElementById('redirect-message').style.display = 'none';
-        }
-
-        // Variáveis de controle
-        let redirectTimer;
-        let countdown = 5;
-
-        // Elementos DOM
-        const countdownEl = document.getElementById('countdown');
-        const debugOutputEl = document.getElementById('debug-output');
-
-        // Função para iniciar contagem regressiva
-        function startCountdown() {
-            clearInterval(redirectTimer);
-            countdown = 5;
-            redirectTimer = setInterval(() => {
-                countdown--;
-                countdownEl.textContent = countdown;
-                if(countdown <= 0) {
-                    clearInterval(redirectTimer);
-                    window.location.href = "https://compra-confirmada.my.canva.site";
-                }
-            }, 1000);
-        }
-
-        // Função para simular redirecionamento (para debug)
-        function simularRedirecionamento() {
-            startCountdown();
-        }
-
-        // Função para limpar localStorage (para debug)
-        function limparLocalStorage() {
-            localStorage.removeItem('ultimo_fbclid');
-            localStorage.removeItem('client_whatsapp');
-            loadDebugData();
-        }
-
         // Função principal que envia todos os eventos
         function trackPurchase() {
             const urlParams = new URLSearchParams(window.location.search);
-            const fbclidDaURL = urlParams.get('fbclid');
+            const fbclid = urlParams.get('fbclid') || localStorage.getItem('fbclid') || '';
             
-            // Atualiza fbclid no localStorage se existir na URL
-            if (fbclidDaURL) {
-                localStorage.setItem('ultimo_fbclid', fbclidDaURL);
-            }
-            
-            const currentFbclid = fbclidDaURL || localStorage.getItem('ultimo_fbclid') || '';
-            
-            // Dados completos do evento
-            const eventData = {
-                fbclid: currentFbclid,
-                whatsapp_number: urlParams.get('whatsapp_number') || localStorage.getItem('client_whatsapp') || '',
-                value: 19.90,
-                currency: 'BRL',
-                offer_type: 'downsell',
-                timestamp: new Date().toISOString()
-            };
-
-            // 1. Envia para dataLayer (GTM/GA4)
-            window.dataLayer = window.dataLayer || [];
-            dataLayer.push({
-                event: 'purchase_completed',
-                ...eventData
+            // 1. Envia para GA4 via dataLayer
+            window.dataLayer.push({
+                'event': 'purchase_completed',
+                'value': 19.90,
+                'currency': 'BRL',
+                'fbclid': fbclid,
+                'offer_type': 'downsell'
             });
 
-             // Dispara Facebook Pixel
+            // 2. Dispara Facebook Pixel
             fbq('track', 'Purchase', {
                 value: 19.90,
                 currency: 'BRL',
                 content_ids: ['downsell_offer'],
                 content_type: 'product',
-                fbclid: currentFbclid
+                fbclid: fbclid
             });
+        }
 
-            // 3. Mostra dados no painel de debug (se ativo)
-            if(debugMode) {
-                document.getElementById('debug-output').textContent = JSON.stringify(eventData, null, 2);
-                console.log('📢 [DEBUG] Evento purchase_completed:', eventData);
+        // Redirecionamento automático
+        let seconds = 5;
+        const timer = setInterval(() => {
+            seconds--;
+            document.getElementById('countdown').textContent = seconds;
+            if(seconds <= 0) {
+                clearInterval(timer);
+                window.location.href = "https://compra-confirmada.my.canva.site";
             }
-        }
+        }, 1000);
 
-        // Inicialização
-        trackPurchase(); // Dispara os eventos imediatamente
-        
-        if(!debugMode) {
-            startCountdown(); // Inicia redirecionamento automático
-        }
+        // Dispara os eventos imediatamente
+        trackPurchase();
     </script>
 </body>
 </html>
