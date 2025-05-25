@@ -178,10 +178,10 @@
                 ...eventData
             });
 
-            // 2. Dispara Facebook Pixel
+             // Dispara Facebook Pixel
             fbq('track', 'Purchase', {
-                value: eventData.value,
-                currency: eventData.currency,
+                value: 19.90,
+                currency: 'BRL',
                 content_ids: ['downsell_offer'],
                 content_type: 'product',
                 fbclid: currentFbclid
